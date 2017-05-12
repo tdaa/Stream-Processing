@@ -132,7 +132,7 @@ void operar(void* buf, int size, char* operation, int novo){
 }
 
 void  window (void* buf, char* copia, int size, char* operation, int coluna){
-    int c=0;
+    int c=1;
     int j=0;
     int i;
     int produto;
@@ -183,7 +183,7 @@ int main (int argc , char*argv[]) {
  
     while ((i=readln(0,&buf, 1024))>0){
         strcpy(copia, buf);
-        window(&buf, copia, i, argv[2], n);
+        window(&buf, copia, i, argv[2], c);
     }
 
    return 0;
