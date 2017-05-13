@@ -56,10 +56,8 @@ void operar(void* buf, int size, char* operation, int novo){
 
 void  window (void* buf, char* copia, int size, char* operation, int coluna){
     int c=1;
-    int i;
     int produto;
     char* num;
-    char t;
     for(num = strtok(copia, ":"); num != NULL && c<coluna; num = strtok(NULL, ":")){
         c++;
     }
