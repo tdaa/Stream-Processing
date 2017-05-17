@@ -8,7 +8,7 @@
 #include <signal.h>
 
 char* aux;
-char* args;
+char args[4096] = {""};
 int col;
 int indice;
 
@@ -42,21 +42,22 @@ ssize_t readln(int fildes, void *buf, int nbytes){
  }
 
 void concat(char** argv, int argc, char* c, int index){
-  char all[1024];
-  char* prev = "";
+  char* prev;
   int i=0;
-  while(i<argc){
+  while(i < argc){
     if(i == index) {
       prev = strcat(c, " ");
-      strcat(all, prev);
+      strcat(args, prev);
+      prev = NULL;
     }
     else{
     prev = strcat(argv[i], " ");
-    strcat(all, prev);
+    strcat(args, prev);
+    prev = NULL;
     }
     i++;
   }
-  args = strdup(all);
+  free(prev);
 }
 
 void escrever1(void *buf, int size, int coluna){
@@ -116,10 +117,14 @@ void escrever2(void *buf, int size, int r){
 }
 
 void spawn(char* buf, int size, char** argv, int argc){
-  int r;
+  int r, i;
   escrever1(buf, size, col);
-  concat(argv+1, argc-1, aux, indice);
-  r = execlp(argv[0], argv[0], args, buf);
+  concat(argv+1, argc-1, aux, indice-1);
+  for(i=0; args[i]!='\0'; i++);
+  i--;
+  args[i] = '\0';
+  char *s = strcat(strcat(argv[0], " ") , args);
+  r = execvp(argv[0], &s);
   escrever2(buf, size, r);
 }
 
@@ -131,11 +136,10 @@ int main(int argc, char** argv){
   }
 
   searchFor(argv+1, argc-1);
-
   int r;
   char buf[1024];
 
-  while((r=readln(0,&buf,1024))>0){
+  while((r=readln(0, buf,1024))>0){
     spawn(buf, r, argv+1, argc-1);
   }
   return 0;
