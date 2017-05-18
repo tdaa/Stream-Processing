@@ -49,15 +49,23 @@ void operate(void* buf, int size, char* operation, int new){
             vlines[0]=new;
         }
         else{
-            if (ready==0) add = 0;
+            if (ready==0) {
+                add = 0;
+                vlines[0] = new;
+                ready++; 
+            }
+
             else {
                 for(i=0; i<ready; i++){
                     add+= vlines[i];
                 }
                 add = add/ready;
-            }
-            vlines[i] = new;
-            ready++;
+                ready++; 
+                for(i=ready-1; i!=0; i--){
+                    vlines[i] = vlines[i-1];
+                }
+                vlines[0]=new;
+            }  
         }
         writeOP(buf, size, add);
     }
@@ -168,9 +176,12 @@ int main (int argc , char*argv[]) {
     char buf[PIPE_BUF];
     char copy[PIPE_BUF];
 
+
     while ((i=readln(0, buf, PIPE_BUF))>0){
         strcpy(copy, buf);
         window(&buf, copy, i, argv[2], c);
+        memset(buf,0,PIPE_BUF);
+        memset(copia,0,PIPE_BUF);
     }
 
    return 0;
