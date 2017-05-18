@@ -18,7 +18,6 @@ void escrever(char* buf, char* execResult, int sizeBuf){
   final = concat(buf, execResult);
   memset(execResult, 0, strlen(execResult));
   write(1, final, sizeBuf+strlen(execResult)+1);
-  printf("\n");
 }
 
 void spawn(char* buf, char* copy, char** argv, int sizeBuf){
