@@ -7,7 +7,6 @@
 #include "readln.h"
 #include "processInput.h"
 
-int operando;
 
 void escrever(void* buf, int size){
     int r;
@@ -20,53 +19,65 @@ void escrever(void* buf, int size){
     }
 }
 
-void operate(void* buf, int size, char* operation, int new){
+void operate(void* buf, int size, char* operation, int new1, int new2){
     if((strcmp(operation, "<"))==0){
-        if(new < operando){
+        if(new1 < new2){
             escrever(buf, size);
         }
     }
     if((strcmp(operation, "<="))==0){
-        if(new <= operando){
+        if(new1 <= new2){
             escrever(buf, size);
         }
     }
     if((strcmp(operation, ">"))==0){
-        if(new > operando){
+        if(new1 > new2){
             escrever(buf, size);
         }
     }
     if((strcmp(operation, ">="))==0){
-        if(new >= operando){
+        if(new1 >= new2){
             escrever(buf, size);
         }
     }
     if((strcmp(operation, "!="))==0){
-        if(new != operando){
+        if(new1 != new2){
             escrever(buf, size);
         }
     }
     if((strcmp(operation, "="))==0){
-        if(new == operando){
+        if(new1 == new2){
             escrever(buf, size);
         }
     }
 }
 
-void  window (void* buf, char* copy, int size, char* operation, int column){
+void  filter (void* buf, char* copy, int size, char* operation, int column, int column2){
     int c=1;
-    int product;
-    char *num;
-    for(num = strtok(copy, ":"); num != NULL && c<column; num = strtok(NULL, ":")){
+    int product1 , product2;
+    char *num1, *num2, copy2[PIPE_BUF];
+    strcpy(copy2, copy);
+
+    for(num1 = strtok(copy, ":"); num1 != NULL && c<column; num1 = strtok(NULL, ":")){
         c++;
     }
-    if (num==NULL){
+    if (num1==NULL){
+        perror("Missing columns!");
+        exit(-1);
+    }
+    c=1;
+    product1 = atoi(num1);
+    for(num2 = strtok(copy2, ":"); num2 != NULL && c<column2; num2 = strtok(NULL, ":")){
+        c++;
+    }
+    if (num2==NULL){
         perror("Missing columns!");
         exit(-1);
     }
     else {
-        product = atoi(num);
-        operate(buf, size, operation, product);
+        product2 = atoi(num2);
+        operate(buf, size, operation, product1, product2);
+
     }
 }
 
@@ -80,11 +91,10 @@ int main (int argc , char*argv[]) {
     int i=0;
     char buf[PIPE_BUF];
     char copy[PIPE_BUF];
-    operando = n;
-
+  
     while ((i=readln(0, buf, PIPE_BUF))>0){
         strcpy(copy, buf);
-        window(&buf, copy, i, argv[2], c);
+        filter(&buf, copy, i, argv[2], c, n);
         memset(buf, 0, i);
     }
    return 0;
