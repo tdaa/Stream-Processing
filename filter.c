@@ -77,6 +77,7 @@ void  filter (void* buf, char* copy, int size, char* operation, int column, int 
     else {
         product2 = atoi(num2);
         operate(buf, size, operation, product1, product2);
+
     }
 }
 
@@ -90,7 +91,7 @@ int main (int argc , char*argv[]) {
     int i=0;
     char buf[PIPE_BUF];
     char copy[PIPE_BUF];
-
+  
     while ((i=readln(0, buf, PIPE_BUF))>0){
         strcpy(copy, buf);
         filter(&buf, copy, i, argv[2], c, n);
