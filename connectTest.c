@@ -177,6 +177,5 @@ int main(int argc, char** argv){
     write(1, buf, r);
     memset(buf, 0, r);
 
-
     return 0;
 }
