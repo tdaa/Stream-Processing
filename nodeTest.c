@@ -37,7 +37,7 @@ int main(int argc, char** argv){
                 close(nonamepipeout[READ]);
                 dup2(nonamepipein[READ], 0);//dup do std in para o pipe in
                 dup2(nonamepipeout[WRITE], 1);//dup do std out para o pipe out
-                execv("./const", &argv[2]);
+                execv(argv[2], &argv[2]);
 
             }
             else{

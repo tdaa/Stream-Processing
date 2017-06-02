@@ -1,0 +1,15 @@
+node 1 const bytes
+node 2 tee entrylog.txt
+node 3 window 2 avg 2
+node 4 filter 2 < 4
+node 6 const -1
+node 7 tee changelog.txt
+node 8 const +1
+node 9 filter 2 >= 4
+connect 1 2
+connect 2 3
+connect 3 4 9
+connect 4 6
+connect 6 7
+connect 8 7
+connect 9 8
