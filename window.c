@@ -11,27 +11,13 @@ int lines;
 int ready;
 
 void writeOP(void* buf, int size, int add){
-    int r;
-    int i=0;
-    char c;
-    c = ((char*)buf)[i];
-    while ((r=(write(1,&c,1)))>0 && i<size-2){
-        i++;
-        c = ((char*)buf)[i];
-    }
     char new[10];
     sprintf(new, "%d", add);
     int len = strlen(new);
-    i=0;
-    c = ':';
-    write(1,&c,1);
-    c = new[i];
-    while ((r=(write(1,&c,1)))>0 && i<len-1 && new!=NULL){
-        i++;
-        c = new[i];
-    }
-    c = '\n';
-    write(1, &c, 1);
+    strcat(buf,":");
+    strcat(buf, new);
+    strcat(buf,"\n");
+    write(1, buf, size+len+2);
 }
 
 void operate(void* buf, int size, char* operation, int new){
@@ -146,15 +132,14 @@ void window(void* buf, char* copy, int size, char* operation, int coluna){
     int product;
     char* num;
     for(num = strtok(copy, ":"); num != NULL && c<coluna; num = strtok(NULL, ":")){
+        printf("%s\n", num);
         c++;
     }
     if (num==NULL){
-        perror("missing columns");
-        exit(-1);
+        return;
     }
     else {
         product = atoi(num);
-
         operate(buf, size, operation, product);
     }
 }
@@ -179,9 +164,8 @@ int main (int argc , char*argv[]) {
 
     while ((i=readln(0, buf, PIPE_BUF))>0){
         strcpy(copy, buf);
-        window(&buf, copy, i, argv[2], c);
-        memset(buf,0,PIPE_BUF);
-        memset(copy,0,PIPE_BUF);
+        window(buf, copy, i, argv[2], c);
+        memset(buf,0,i);
     }
 
    return 0;

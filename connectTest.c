@@ -52,7 +52,7 @@ pid_t node(char** argv){
                 close(nonamepipeout[READ]);
                 dup2(nonamepipein[READ], 0);//dup do std in para o pipe in
                 dup2(nonamepipeout[WRITE], 1);//dup do std out para o pipe out
-                execv("./const", &argv[2]);
+                execv(argv[2], &argv[2]);
 
             }
             else{
@@ -168,8 +168,8 @@ int main(int argc, char** argv){
     connect(i, result);
     memset(buf, 0, r);
 
-    int infd = open("in22", O_WRONLY);
-    int outfd3 = open("out7", O_RDONLY);
+    int infd = open("in1", O_WRONLY);
+    int outfd3 = open("out2", O_RDONLY);
     r=readln(0, buf, PIPE_BUF);
     write(infd, buf, r);
     memset(buf, 0, r);
@@ -177,18 +177,6 @@ int main(int argc, char** argv){
     write(1, buf, r);
     memset(buf, 0, r);
 
-    r = readln(0, buf, PIPE_BUF);
-    strcpy(copy, buf);
-    i = processInput(result, copy, " ");
-    connect(i, result);
-    memset(buf, 0, r);
 
-    outfd3 = open("out1", O_RDONLY);
-    r = readln(0, buf, PIPE_BUF);
-    write(infd, buf, r);
-    memset(buf, 0, r);
-    r = readln(outfd3, buf, PIPE_BUF);
-    write(1, buf, r);
-    memset(buf, 0, r);
     return 0;
 }

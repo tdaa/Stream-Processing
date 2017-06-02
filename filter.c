@@ -9,14 +9,8 @@
 
 
 void escrever(void* buf, int size){
-    int r;
-    int i=0;
-    char c;
-    c = ((char*)buf)[i];
-    while ((r=(write(1,&c,1)))>0 && i<size){
-        i++;
-        c = ((char*)buf)[i];
-    }
+    strcat(buf, "\n");
+    write(1, buf, size);
 }
 
 void operate(void* buf, int size, char* operation, int new1, int new2){
@@ -62,8 +56,7 @@ void  filter (void* buf, char* copy, int size, char* operation, int column, int 
         c++;
     }
     if (num1==NULL){
-        perror("Missing columns!");
-        exit(-1);
+        return;
     }
     c=1;
     product1 = atoi(num1);
@@ -71,8 +64,7 @@ void  filter (void* buf, char* copy, int size, char* operation, int column, int 
         c++;
     }
     if (num2==NULL){
-        perror("Missing columns!");
-        exit(-1);
+        return;
     }
     else {
         product2 = atoi(num2);
@@ -91,7 +83,7 @@ int main (int argc , char*argv[]) {
     int i=0;
     char buf[PIPE_BUF];
     char copy[PIPE_BUF];
-  
+
     while ((i=readln(0, buf, PIPE_BUF))>0){
         strcpy(copy, buf);
         filter(&buf, copy, i, argv[2], c, n);
