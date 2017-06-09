@@ -19,12 +19,14 @@ int main(int argc, char **argv){
         int i=0;
         char buf[PIPE_BUF];
 		while((i = readln(0, buf, PIPE_BUF))>0){
-			buf[i-1] = ':';
-			strcat(buf, argv[1]);
-            strcat(buf,"\n");
-			i+=strlen(argv[1]);
-			write(1, buf, i+1);
-			memset(buf, 0, i);
+            if(strncmp(buf, "\n", 1)){
+                buf[i-1] = ':';
+                strcat(buf, argv[1]);
+                strcat(buf,"\n");
+                i+=strlen(argv[1]);
+                write(1, buf, i+1);
+                memset(buf, 0, i);
+            }
 		}
         return 0;
     }
